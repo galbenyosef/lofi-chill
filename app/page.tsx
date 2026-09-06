@@ -3,6 +3,7 @@
 import { useEffect, useReducer, useState } from 'react';
 import { Headphones, Moon, Pause, Play, RotateCcw, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RadioPlayer } from '@/components/radio-player';
 import { initialTimer, labels, timerReducer, type Mode } from '@/lib/timer';
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
         {settings && <fieldset className="timer-settings"><legend>Session length · minutes</legend>{(Object.keys(labels) as Mode[]).map(mode => <label key={mode}>{labels[mode]}<input type="number" min="1" max="120" value={timer.durations[mode]} onChange={e => dispatch({ type: 'duration', mode, minutes: Number(e.target.value) })} /></label>)}<p>Changes apply to your next session while a timer is running.</p></fieldset>}
         <div className="session-count"><span className="session-dots" aria-hidden="true">{[0,1,2,3].map(i => <span key={i} className={i < (timer.completed % 4 || (timer.completed ? 4 : 0)) ? 'filled' : ''} />)}</span><span>{timer.completed} focus {timer.completed === 1 ? 'session' : 'sessions'} today</span></div>
       </section>
-      <div className="sound-desk"><section className="sound-panel"><p className="eyebrow">THE SOUNDTRACK</p><h2>A softer kind of radio.</h2><p className="muted">Lofi beats, a little rain, and room to think.</p></section></div>
+      <div className="sound-desk"><RadioPlayer /></div>
     </main>
     <footer><span><Sparkles size={14} /> A little focus. A little flow.</span><span>Take it one session at a time.</span></footer>
   </div>;

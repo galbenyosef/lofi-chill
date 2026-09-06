@@ -41,3 +41,10 @@ footer { max-width:1320px; margin:auto; display:flex; align-items:center; justif
 .quiet .sound-desk,.quiet footer { display:none; } .quiet .timer-section { padding-top:16vh; }
 @media(max-width:700px) { .study-app { padding:0 5%; } .topbar { height:78px; } .brand { font-size:18px; } .timer-section { padding:38px 0; } .timer-face { letter-spacing:-5px; margin-top:26px; } .timer-tabs button { padding:10px 14px; } .sound-desk { grid-template-columns:1fr; } .sound-panel { padding:25px 20px; } .sound-panel+.sound-panel { border-left:0; border-top:1px solid var(--border); } footer { flex-wrap:wrap; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+.panel-heading { display:flex; justify-content:space-between; gap:15px; color:var(--muted-foreground); } .panel-heading svg { margin-top:-3px; }
+.station-select { width:100%; height:42px !important; margin-top:8px; background:#141b25 !important; padding-left:12px !important; border-color:var(--border) !important; }
+[data-slot=native-select-wrapper] { width:100%; }
+.radio-start { display:flex; gap:17px; align-items:center; margin:22px 0; min-height:88px; } .radio-mark { width:68px; height:68px; display:grid; place-items:center; background:#e7bd860c; border:1px solid #e7bd8625; border-radius:15px; color:var(--primary); }
+.radio-start p { margin:0 0 8px; font-size:15px; } .radio-connect { padding:0; background:none; border:0; color:var(--primary); font-size:14px; } .radio-connect span { padding-left:10px; }
+.radio-footnote { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; color:var(--muted-foreground); font-size:12px; } .radio-footnote a { display:flex; align-items:center; gap:5px; } a { color:inherit; text-underline-offset:3px; }
+.privacy-note { color:var(--muted-foreground); font-size:12px; margin-top:16px; line-height:1.6; } .privacy-note summary { cursor:pointer; } .radio-embed iframe { width:100%; border:0; margin-top:8px; } .radio-embed .text-button { font-size:12px; }
