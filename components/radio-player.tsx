@@ -13,18 +13,20 @@ export function RadioPlayer() {
   const [enabled, setEnabled] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [slow, setSlow] = useState(false);
+  // Browser-only preference hydration intentionally updates after the server render.
+  // oxlint-disable-next-line react/react-compiler
   useEffect(() => { try { const value = localStorage.getItem('lofi-chill.station'); if (value === 'lofi' || value === 'loungetunes') setStation(value); } catch { /* Optional storage. */ } }, []);
-  useEffect(() => { if (!enabled) return; setLoaded(false); setSlow(false); const timeout = setTimeout(() => setSlow(true), 12000); return () => clearTimeout(timeout); }, [enabled, station]);
+  useEffect(() => { if (!enabled) return; const timeout = setTimeout(() => setSlow(true), 12000); return () => clearTimeout(timeout); }, [enabled, station]);
   return <section className="sound-panel" aria-labelledby="radio-heading">
     <div className="panel-heading"><p className="eyebrow">01 / THE SOUNDTRACK</p><Radio size={18} /></div>
     <h2 id="radio-heading">A softer kind of radio.</h2>
     <label className="sr-only" htmlFor="station">Radio station</label>
-    <NativeSelect id="station" value={station} className="station-select" onChange={e => { const value = e.target.value as keyof typeof stations; setStation(value); try { localStorage.setItem('lofi-chill.station', value); } catch { /* Optional storage. */ } }}>{Object.entries(stations).map(([id, name]) => <NativeSelectOption key={id} value={id}>{name}</NativeSelectOption>)}</NativeSelect>
+    <NativeSelect id="station" value={station} className="station-select" onChange={e => { const value = e.target.value as keyof typeof stations; setStation(value); setLoaded(false); setSlow(false); try { localStorage.setItem('lofi-chill.station', value); } catch { /* Optional storage. */ } }}>{Object.entries(stations).map(([id, name]) => <NativeSelectOption key={id} value={id}>{name}</NativeSelectOption>)}</NativeSelect>
     {enabled ? <div className="radio-embed">
-      {!loaded && <p className="muted" role="status">{slow ? 'Taking a little longer. Try opening the station below.' : 'Connecting to laut.fm…'}</p>}
+      {!loaded && <output className="muted" aria-live="polite">{slow ? 'Taking a little longer. Try opening the station below.' : 'Connecting to laut.fm…'}</output>}
       <iframe key={station} src={widgetUrl(station)} title={`${stations[station]} — official laut.fm player`} allow="autoplay" height="200" onLoad={() => setLoaded(true)} />
       <button className="text-button" onClick={() => setEnabled(false)}><X size={14} />Disconnect radio</button>
-    </div> : <div className="radio-start"><div className="radio-mark"><Radio size={28} /></div><div><p>Find your frequency.</p><button className="radio-connect" onClick={() => setEnabled(true)}>Connect radio <span aria-hidden="true">↗</span></button></div></div>}
+    </div> : <div className="radio-start"><div className="radio-mark"><Radio size={28} /></div><div><p>Find your frequency.</p><button className="radio-connect" onClick={() => { setLoaded(false); setSlow(false); setEnabled(true); }}>Connect radio <span aria-hidden="true">↗</span></button></div></div>}
     <div className="radio-footnote"><span>Free · ad-supported · by laut.fm</span><a href={`https://laut.fm/${station}`} target="_blank" rel="noreferrer">Open station <ExternalLink size={12} /></a></div>
     <details className="privacy-note"><summary>About the radio connection</summary><p>Connecting loads laut.fm’s official player and shares connection information, such as your IP address and browser, with the provider. Use its play and volume controls to listen. Ads and availability are managed by laut.fm. If playback is blocked, use “Open station”.</p><a href="https://laut.fm/datenschutz" target="_blank" rel="noreferrer">laut.fm privacy information</a></details>
   </section>;
