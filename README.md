@@ -1,6 +1,6 @@
 # lofi & chill
 
-A quiet study desk with a Pomodoro timer, official laut.fm radio, and locally generated ambient sounds.
+A quiet study desk with a Pomodoro timer, inline YouTube lofi radio, and locally generated ambient sounds.
 
 ## Run locally
 
@@ -29,23 +29,25 @@ The app uses React, TypeScript, Vinext/Vite, and the bundled Shadcn/Base UI cont
 - Countdown uses an absolute deadline and refreshes when the tab becomes visible. A sleeping device may delay the visual completion message until it wakes.
 - Pausing and resetting do not count as completed sessions. Session counts reset at local midnight.
 - Durations and today's completed sessions are saved on this browser. Reloading starts a fresh, paused timer.
-- Focus mode hides the mixer while audio continues. Exit focus mode to adjust or stop it.
+- Focus mode hides ambient controls and keeps the radio player visible. Exit focus mode to adjust ambient sounds.
 - Ambient volumes are remembered, but playback always requires a click. Browser storage is optional; the app still works if it is unavailable.
 
 ## Radio integration
 
-The app loads the **official laut.fm iframe**, only after the listener clicks Connect radio. The player keeps its own play, volume, branding, and advertising controls. No direct stream scraping, audio proxy, downloading, redistribution, or ad removal is implemented.
+Radio playback uses the official YouTube privacy-enhanced iframe. Pressing Play radio mounts the player on this page with `autoplay=1`, `playsinline=1`, and visible native controls. No popup or navigation is part of the app's play action. If browser autoplay is blocked, the listener can press play inside the embedded video. Stop radio unmounts it and stops playback. Changing stations replaces the old player.
 
-Station choices:
+The videos are Lofi Girl's official broadcasts:
 
-- https://laut.fm/lofi
-- https://laut.fm/loungetunes
+- Lofi: https://www.youtube.com/watch?v=jfKfPfyJRdk
+- Synthwave: https://www.youtube.com/watch?v=MVPTGNGiI-4
 
-Integration source: https://laut.fm/widgets/configurator/player_for/lofi
+Provider documentation: https://developers.google.com/youtube/player_parameters
 
-laut.fm explicitly provides this widget for embedding. Free listening is ad-supported; it is not a claim that the music is public domain or licensed for reuse. Provider availability and future terms may change. A persistent station link provides a fallback if an embed or stream is blocked. An iframe load event only indicates that its document loaded; it cannot confirm that audio is playing.
+The original laut.fm widget deliberately opens a separate window. Its terms (§6.9) prohibit third-party inline audio streams, so it has been replaced rather than bypassed: https://laut.fm/pages/terms_and_conditions
 
-Connecting shares connection information with laut.fm. The interface explains this before connection. Provider privacy information: https://laut.fm/datenschutz
+The embed is kept visible (at least 200px high), including in focus mode. YouTube's branding, volume controls, and advertising remain intact. Only explicit source/provider links can navigate away. Playback requests are made after a listener clicks; preferences do not auto-start music. Referrer policy permits the origin information required by YouTube embeds. An iframe load event confirms document loading, not successful audio playback; station outages, region restrictions, and browser blocking remain provider-dependent. The app does not download, extract, proxy, or redistribute music.
+
+Connecting shares connection information with YouTube. Google privacy policy: https://policies.google.com/privacy
 
 ## Ambient audio
 
