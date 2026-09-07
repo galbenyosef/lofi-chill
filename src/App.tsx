@@ -1,6 +1,3 @@
-'use client';
-
-import Link from 'next/link';
 import { useEffect, useReducer, useState } from 'react';
 import {
   Bell,
@@ -26,7 +23,7 @@ import { AmbientMixer } from '@/components/ambient-mixer';
 import { RadioPlayer } from '@/components/radio-player';
 import { initialTimer, labels, timerReducer, type Mode } from '@/lib/timer';
 
-export default function Home() {
+export default function App() {
   const [timer, dispatch] = useReducer(timerReducer, undefined, initialTimer);
   useTimerTools(timer, dispatch);
   const chime = useTimerChime(timer.completion);
@@ -81,12 +78,12 @@ export default function Home() {
   return (
     <div className={`study-app ${quiet ? 'quiet' : ''}`}>
       <header className="topbar">
-        <Link href="/" className="brand">
+        <a href={import.meta.env.BASE_URL} className="brand">
           <CassetteTape size={27} />
           <span>
             lofi <i>&</i> chill
           </span>
-        </Link>
+        </a>
         <button
           className="text-button"
           onClick={() => setQuiet(!quiet)}

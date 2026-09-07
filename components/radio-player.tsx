@@ -1,4 +1,3 @@
-'use client';
 import { useEffect, useState } from 'react';
 import { ExternalLink, Radio, Play, Square } from 'lucide-react';
 import {

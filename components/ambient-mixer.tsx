@@ -1,4 +1,3 @@
-'use client';
 import { useEffect, useRef, useState } from 'react';
 import { CloudRain, Waves, Wind, Volume2, Pause, Play } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';

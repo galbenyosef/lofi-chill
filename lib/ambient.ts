@@ -36,9 +36,12 @@ export class AmbientMixer {
     this.rainRequest = request;
     const timeout = setTimeout(() => request.abort(), 15000);
     this.rainLoading = (async () => {
-      const response = await fetch('/audio/rain.mp3', {
-        signal: request.signal,
-      });
+      const response = await fetch(
+        `${import.meta.env?.BASE_URL ?? '/'}audio/rain.mp3`,
+        {
+          signal: request.signal,
+        },
+      );
       if (!response.ok) throw new Error('Could not load the rain recording.');
       const buffer = await this.context.decodeAudioData(
         await response.arrayBuffer(),
