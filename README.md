@@ -43,3 +43,9 @@ The station list uses these user-selected broadcasts:
 - Lofi Girl — sleep/chill: https://www.youtube.com/watch?v=JD-kMIpDfnY
 
 Provider documentation: https://developers.google.com/youtube/player_parameters
+
+## GitHub Pages
+
+Run `npm run build:pages` to generate `dist/` with the `/lofi-chill/` base path.
+
+To publish, push the commits to `main`, select **Settings → Pages → Source → GitHub Actions**, then run **Actions → Deploy to GitHub Pages → Run workflow** on `main`. Deployment is manual; pushing alone does not publish the site.
