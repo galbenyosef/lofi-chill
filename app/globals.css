@@ -888,3 +888,20 @@ button:disabled {
     display: none;
   }
 }
+
+.chime-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+.chime-controls .text-button {
+  padding: 6px;
+  font-size: 13px;
+}
+.audio-warning {
+  display: block;
+  color: #f5c7df;
+  font-size: 13px;
+  margin: 8px auto;
+  max-width: 320px;
+}

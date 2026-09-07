@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useReducer, useState } from 'react';
 import {
+  Bell,
+  BellOff,
   CassetteTape,
   Moon,
   Pause,
@@ -12,6 +14,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTimerChime } from '@/hooks/use-timer-chime';
 import { useTimerTools } from '@/hooks/use-timer-tools';
 import { AmbientMixer } from '@/components/ambient-mixer';
 import { RadioPlayer } from '@/components/radio-player';
@@ -20,6 +23,7 @@ import { initialTimer, labels, timerReducer, type Mode } from '@/lib/timer';
 export default function Home() {
   const [timer, dispatch] = useReducer(timerReducer, undefined, initialTimer);
   useTimerTools(timer, dispatch);
+  const chime = useTimerChime(timer.completion);
   const [ready, setReady] = useState(false);
   const [settings, setSettings] = useState(false);
   const [quiet, setQuiet] = useState(false);
@@ -133,7 +137,10 @@ export default function Home() {
               </button>
               <button
                 className="primary-button"
-                onClick={() => dispatch({ type: 'toggle', now: Date.now() })}
+                onClick={() => {
+                  if (chime.enabled) chime.arm();
+                  dispatch({ type: 'toggle', now: Date.now() });
+                }}
               >
                 {timer.deadline ? (
                   <Pause size={18} fill="currentColor" />
@@ -153,6 +160,24 @@ export default function Home() {
                 <SlidersHorizontal size={20} />
               </button>
             </div>
+            <div className="chime-controls">
+              <button
+                className="text-button"
+                aria-pressed={chime.enabled}
+                onClick={() => {
+                  if (!chime.enabled) chime.arm();
+                  chime.setEnabled(!chime.enabled);
+                }}
+              >
+                {chime.enabled ? <Bell size={15} /> : <BellOff size={15} />}End
+                sound {chime.enabled ? 'on' : 'off'}
+              </button>
+            </div>
+            {chime.error && (
+              <output className="audio-warning" aria-live="polite">
+                {chime.error}
+              </output>
+            )}
             {settings && (
               <fieldset className="timer-settings">
                 <legend>Session length · minutes</legend>
@@ -174,6 +199,14 @@ export default function Home() {
                     />
                   </label>
                 ))}
+                <button
+                  className="text-button"
+                  onClick={() => {
+                    void chime.play();
+                  }}
+                >
+                  Test sound
+                </button>
                 <p>
                   Changes apply to your next session while a timer is running.
                 </p>

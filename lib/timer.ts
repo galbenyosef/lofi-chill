@@ -5,6 +5,7 @@ export type Timer = {
   remaining: number;
   deadline: number | null;
   completed: number;
+  completion: number;
   day: string;
   durations: Durations;
   notice: string;
@@ -23,6 +24,7 @@ export const initialTimer = (): Timer => ({
   remaining: 1500,
   deadline: null,
   completed: 0,
+  completion: 0,
   day: localDay(Date.now()),
   durations: { focus: 25, short: 5, long: 15 },
   notice: 'Make room for one thing.',
@@ -100,6 +102,7 @@ export function timerReducer(state: Timer, action: Action): Timer {
     return {
       ...s,
       completed,
+      completion: s.completion + 1,
       mode,
       remaining: s.durations[mode] * 60,
       deadline: null,

@@ -66,3 +66,27 @@ await test('reset and mode changes cancel deadlines without adding sessions', ()
   assert.equal(changed.completed, 0);
   assert.equal(timerReducer(running, { type: 'reset', now }).remaining, 1500);
 });
+
+await test('every timer completion emits one chime event, including both break modes', () => {
+  for (const mode of ['focus', 'short', 'long'] as const) {
+    const running = timerReducer(
+      { ...initial(), mode, remaining: 1 },
+      { type: 'toggle', now },
+    );
+    const done = timerReducer(running, { type: 'tick', now: now + 1000 });
+    assert.equal(done.completion, 1);
+    assert.equal(
+      timerReducer(done, { type: 'tick', now: now + 2000 }).completion,
+      1,
+    );
+    assert.equal(timerReducer(running, { type: 'reset', now }).completion, 0);
+    assert.equal(
+      timerReducer(running, { type: 'mode', mode: 'short', now }).completion,
+      0,
+    );
+    assert.equal(
+      timerReducer(running, { type: 'toggle', now: now + 500 }).completion,
+      0,
+    );
+  }
+});

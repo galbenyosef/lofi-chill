@@ -27,6 +27,7 @@ The app uses React, TypeScript, Vinext/Vite, and the bundled Shadcn/Base UI cont
 - Focus / short break / long break default to 25 / 5 / 15 minutes.
 - Every fourth completed focus session offers a long break. Breaks start manually.
 - Countdown uses an absolute deadline and refreshes when the tab becomes visible. A sleeping device may delay the visual completion message until it wakes.
+- A gentle two-note chime plays once when a focus or break timer finishes. End sound toggles it; Test sound in timer settings previews it. Starting a timer unlocks browser audio. Sleeping devices may delay alerts until the page wakes; this is not an operating-system alarm.
 - Pausing and resetting do not count as completed sessions. Session counts reset at local midnight.
 - Durations and today's completed sessions are saved on this browser. Reloading starts a fresh, paused timer.
 - Focus mode hides ambient controls and keeps the radio player visible. Exit focus mode to adjust ambient sounds.
