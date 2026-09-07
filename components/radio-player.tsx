@@ -109,7 +109,7 @@ export function RadioPlayer() {
         </button>
       )}
       <div className="radio-footnote">
-        <span>Music by Lofi Girl · YouTube may show ads</span>
+        <span>Radio by {stations[station].creator} · YouTube may show ads</span>
         <a
           href={`https://www.youtube.com/watch?v=${stations[station].videoId}`}
           target="_blank"
@@ -126,7 +126,7 @@ export function RadioPlayer() {
           another tab unless you choose the source link or a link inside
           YouTube. If your browser blocks autoplay, press play inside the video.
           Connecting shares your connection information with YouTube. Broadcasts
-          may occasionally be unavailable; try the other station.
+          may occasionally be unavailable; try another station.
         </p>
         <a
           href="https://policies.google.com/privacy"

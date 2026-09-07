@@ -36,10 +36,12 @@ The app uses React, TypeScript, Vinext/Vite, and the bundled Shadcn/Base UI cont
 
 Radio playback uses the official YouTube privacy-enhanced iframe. Pressing Play radio mounts the player on this page with `autoplay=1`, `playsinline=1`, and visible native controls. No popup or navigation is part of the app's play action. If browser autoplay is blocked, the listener can press play inside the embedded video. Stop radio unmounts it and stops playback. Changing stations replaces the old player.
 
-The videos are Lofi Girl's official broadcasts:
+The station list uses these user-selected broadcasts:
 
-- Lofi: https://www.youtube.com/watch?v=jfKfPfyJRdk
-- Synthwave: https://www.youtube.com/watch?v=MVPTGNGiI-4
+- Lofi Girl — study: https://www.youtube.com/watch?v=rFZHOHl-L8A
+- steezyasfuck — hip hop: https://www.youtube.com/watch?v=rPjez8z61rI
+- Lofi Girl — synthwave: https://www.youtube.com/watch?v=4xDzrJKXOOY
+- Lofi Girl — sleep/chill: https://www.youtube.com/watch?v=JD-kMIpDfnY
 
 Provider documentation: https://developers.google.com/youtube/player_parameters
 

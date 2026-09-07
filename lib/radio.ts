@@ -1,13 +1,27 @@
 export const stations = {
   lofi: {
     name: 'Lofi Girl',
-    description: 'Beats to relax / study to',
-    videoId: 'jfKfPfyJRdk',
+    creator: 'Lofi Girl',
+    description: 'Beats to study to',
+    videoId: 'rFZHOHl-L8A',
+  },
+  hiphop: {
+    name: 'steezyasfuck',
+    creator: 'steezyasfuck',
+    description: 'Hip hop beats',
+    videoId: 'rPjez8z61rI',
   },
   synthwave: {
     name: 'Synthwave',
+    creator: 'Lofi Girl',
     description: 'Beats to chill / game to',
-    videoId: 'MVPTGNGiI-4',
+    videoId: '4xDzrJKXOOY',
+  },
+  sleep: {
+    name: 'Lofi Girl',
+    creator: 'Lofi Girl',
+    description: 'Beats to sleep / chill to',
+    videoId: 'JD-kMIpDfnY',
   },
 } as const;
 export type Station = keyof typeof stations;
