@@ -82,7 +82,10 @@ export function AmbientMixer() {
     }
   }
   return (
-    <section className="sound-panel" aria-labelledby="ambience-heading">
+    <section
+      className="sound-panel ambient-panel"
+      aria-labelledby="ambience-heading"
+    >
       <div className="panel-heading">
         <p className="eyebrow">SIDE B / A LITTLE ATMOSPHERE</p>
         <Volume2 size={18} />

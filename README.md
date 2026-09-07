@@ -75,3 +75,7 @@ Keep changes reviewable, run the relevant checks, and commit each important chan
 Timer regression tests cover background elapsed time, pause/resume, completion deduplication, long-break cadence, reset, mode changes, and stored-value validation. Lint checks application code; generated `components/ui` and `hooks/use-mobile.ts` are excluded from lint and remain covered by TypeScript.
 
 Supporting browsers can expose `get_focus_session` and `control_focus_session` through the optional document WebMCP API. No compatible validation context was available during implementation, so these tools have not been runtime verified. Radio audio and visual browser QA also require a manual check; the build and HTTP response do not verify third-party audio playback.
+
+## Workspace layout
+
+Desktop shows the timer and ambient controls in the left column and the radio alongside them, reducing vertical scrolling. Timer settings open in an accessible popover. Smaller screens use a single column with timer and ambient controls before the video; scrolling remains available for small viewports, zoom, expanded provider information, and accessibility. The synthwave palette, grid, and stationary glow are preserved.

@@ -13,6 +13,12 @@ import {
   SlidersHorizontal,
   Sparkles,
 } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverTitle,
+} from '@/components/ui/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTimerChime } from '@/hooks/use-timer-chime';
 import { useTimerTools } from '@/hooks/use-timer-tools';
@@ -151,14 +157,55 @@ export default function Home() {
                   ? 'Pause session'
                   : `Start ${timer.mode === 'focus' ? 'focusing' : 'break'}`}
               </button>
-              <button
-                className="icon-button"
-                aria-label="Timer settings"
-                aria-expanded={settings}
-                onClick={() => setSettings(!settings)}
-              >
-                <SlidersHorizontal size={20} />
-              </button>
+              <Popover open={settings} onOpenChange={setSettings}>
+                <PopoverTrigger
+                  className="icon-button"
+                  aria-label="Timer settings"
+                >
+                  <SlidersHorizontal size={20} />
+                </PopoverTrigger>
+                <PopoverContent
+                  className="timer-settings-popover"
+                  side="bottom"
+                  align="end"
+                  sideOffset={12}
+                >
+                  <PopoverTitle>Timer settings</PopoverTitle>
+                  <fieldset className="timer-settings">
+                    <legend>Session length · minutes</legend>
+                    {(Object.keys(labels) as Mode[]).map((mode) => (
+                      <label key={mode}>
+                        {labels[mode]}
+                        <input
+                          type="number"
+                          min="1"
+                          max="120"
+                          value={timer.durations[mode]}
+                          onChange={(e) =>
+                            dispatch({
+                              type: 'duration',
+                              mode,
+                              minutes: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </label>
+                    ))}
+                    <button
+                      className="text-button"
+                      onClick={() => {
+                        void chime.play();
+                      }}
+                    >
+                      Test sound
+                    </button>
+                    <p>
+                      Changes apply to your next session while a timer is
+                      running.
+                    </p>
+                  </fieldset>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="chime-controls">
               <button
@@ -177,40 +224,6 @@ export default function Home() {
               <output className="audio-warning" aria-live="polite">
                 {chime.error}
               </output>
-            )}
-            {settings && (
-              <fieldset className="timer-settings">
-                <legend>Session length · minutes</legend>
-                {(Object.keys(labels) as Mode[]).map((mode) => (
-                  <label key={mode}>
-                    {labels[mode]}
-                    <input
-                      type="number"
-                      min="1"
-                      max="120"
-                      value={timer.durations[mode]}
-                      onChange={(e) =>
-                        dispatch({
-                          type: 'duration',
-                          mode,
-                          minutes: Number(e.target.value),
-                        })
-                      }
-                    />
-                  </label>
-                ))}
-                <button
-                  className="text-button"
-                  onClick={() => {
-                    void chime.play();
-                  }}
-                >
-                  Test sound
-                </button>
-                <p>
-                  Changes apply to your next session while a timer is running.
-                </p>
-              </fieldset>
             )}
             <div className="session-count">
               <span className="session-dots" aria-hidden="true">

@@ -905,3 +905,210 @@ button:disabled {
   margin: 8px auto;
   max-width: 320px;
 }
+
+/* Compact study workspace: timer + ambience on the left, broadcast on the right. */
+.study-app {
+  padding-inline: clamp(16px, 3vw, 48px);
+}
+.topbar {
+  max-width: 1280px;
+  height: 66px;
+}
+main {
+  max-width: 1280px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 16px 20px;
+  align-items: start;
+  padding-block: 20px;
+}
+.timer-section {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0;
+  min-width: 0;
+}
+.sound-desk {
+  display: contents;
+}
+.radio-panel {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+}
+.ambient-panel {
+  grid-column: 1;
+  grid-row: 2;
+}
+.timer-screen {
+  padding: 18px 24px 0;
+  max-width: none;
+}
+.screen-header {
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.timer-face {
+  font-size: clamp(76px, 8.5vw, 120px);
+  line-height: 1.15;
+  margin-top: 10px;
+  letter-spacing: -7px;
+}
+.timer-notice {
+  margin: 4px 0 17px;
+}
+.timer-tabs button {
+  padding: 8px 17px;
+}
+.timer-actions {
+  gap: 16px;
+}
+.primary-button {
+  min-height: 46px;
+}
+.chime-controls {
+  margin-top: 8px;
+}
+.session-count {
+  margin-top: 10px;
+}
+.tape-edge {
+  margin-top: 14px;
+  padding: 12px 0 14px;
+}
+.sound-panel {
+  padding: 20px 22px;
+}
+.sound-panel .eyebrow {
+  margin-bottom: 10px;
+  letter-spacing: 1.5px;
+}
+.ambient-panel .panel-heading {
+  display: none;
+}
+.ambience-heading h2 {
+  font-size: 21px;
+}
+.ambient-channels {
+  margin: 18px 0;
+  gap: 21px;
+}
+.ambient-channel {
+  grid-template-columns: 22px 106px minmax(40px, 1fr) 37px;
+}
+.radio-start {
+  min-height: 200px;
+  margin: 18px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.radio-embed iframe {
+  margin-top: 18px;
+}
+.radio-footnote {
+  margin-top: 18px;
+}
+.timer-settings-popover {
+  width: min(400px, calc(100vw - 32px));
+  background: #1d1732;
+  border: 1px solid #a58bda55;
+  padding: 18px;
+  box-shadow: 0 16px 55px #030616aa;
+}
+.timer-settings {
+  margin: 8px 0 0;
+  padding: 12px;
+  gap: 12px;
+}
+.timer-settings label {
+  min-width: 85px;
+}
+.timer-settings p {
+  line-height: 1.5;
+}
+footer {
+  max-width: 1280px;
+  padding-block: 12px;
+}
+.quiet .timer-section {
+  padding-top: 0;
+}
+.quiet .sound-desk {
+  display: contents;
+}
+.quiet .radio-panel {
+  grid-row: 1;
+}
+@media (min-width: 1100px) and (min-height: 800px) {
+  main {
+    padding-block: 28px;
+    gap: 20px 24px;
+  }
+  .timer-screen {
+    padding-top: 24px;
+  }
+  .timer-face {
+    font-size: 128px;
+    margin-top: 18px;
+  }
+}
+@media (max-width: 800px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-block: 16px;
+  }
+  .timer-section,
+  .sound-desk {
+    width: 100%;
+  }
+  .sound-desk {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 0;
+  }
+  .ambient-panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .radio-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .timer-screen {
+    padding: 16px 18px 0;
+  }
+  .timer-face {
+    font-size: clamp(72px, 16vw, 110px);
+  }
+  .radio-start {
+    min-height: 120px;
+  }
+  .sound-panel {
+    padding: 18px;
+  }
+  .quiet .sound-desk {
+    display: grid;
+    max-width: none;
+  }
+  .quiet .radio-panel {
+    grid-row: 1;
+  }
+}
+@media (max-width: 380px) {
+  .timer-actions {
+    gap: 8px;
+  }
+  .timer-tabs button {
+    padding-inline: 8px;
+  }
+  .timer-screen {
+    padding-inline: 12px;
+  }
+  .ambient-channel {
+    grid-template-columns: 20px 90px minmax(30px, 1fr) 32px;
+    gap: 6px;
+  }
+}
