@@ -75,7 +75,7 @@ export function AmbientMixer() {
     } catch {
       if (id === operation.current)
         setError(
-          'Couldn’t start audio. Check your browser’s sound settings and try again.',
+          'Couldn’t start audio. Check your connection and browser’s sound settings, then try again.',
         );
     } finally {
       if (id === operation.current) setPending(false);

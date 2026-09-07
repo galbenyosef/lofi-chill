@@ -1,6 +1,6 @@
 # lofi & chill
 
-A quiet study desk with a Pomodoro timer, inline YouTube lofi radio, and locally generated ambient sounds.
+A quiet study desk with a Pomodoro timer, inline YouTube lofi radio, and a real rain recording and locally generated ambient sounds.
 
 ## Run locally
 
@@ -53,7 +53,9 @@ Connecting shares connection information with YouTube. Google privacy policy: ht
 
 ## Ambient audio
 
-`lib/ambient.ts` synthesizes stereo noise using the Web Audio API. Low-pass filtering gives the rain and brown-noise textures; a slow filter modulation gives ocean hush. These are synthetic soundscapes, not field recordings. No external sound files or music samples are used. Volume changes fade smoothly.
+Rainfall uses a bundled 45-second stereo field recording from Ylmir's **Rain (loopable)** collection, released under CC0. It loads from `/audio/rain.mp3` when ambience first starts, is decoded once per mixer, and loops through the Web Audio API. The recording retains its original texture without the synthetic low-pass rain filter. Volume changes fade smoothly. A failed load can be retried; requests time out after 15 seconds and are cancelled when the mixer is disposed.
+
+Brown noise and ocean hush remain locally synthesized. No third-party sound service is contacted during playback. Source and license details: [public/audio/CREDITS.md](public/audio/CREDITS.md).
 
 ## Git workflow
 
