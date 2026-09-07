@@ -11,16 +11,17 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by the server, usually http://localhost:3000.
+Open the local URL printed by the server, usually http://localhost:5173.
 
 ```sh
 npm test
 npm run typecheck
 npm run lint
 npm run build
+npm run preview
 ```
 
-The app uses React, TypeScript, Vinext/Vite, and the bundled Shadcn/Base UI controls. No application database, account, API key, or music server is required. The generated Sites/Cloudflare adapter supports the local development and production build; this repository has not been registered, pushed, or deployed to Sites.
+The app uses Vite, React, TypeScript, and Shadcn/Base UI. It runs entirely in the browser and stores preferences locally. `npm run build` generates the static site in `dist/`; `npm run preview` serves that build locally.
 
 ## Study behavior
 
