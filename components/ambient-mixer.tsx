@@ -84,11 +84,11 @@ export function AmbientMixer() {
   return (
     <section className="sound-panel" aria-labelledby="ambience-heading">
       <div className="panel-heading">
-        <p className="eyebrow">02 / A LITTLE ATMOSPHERE</p>
+        <p className="eyebrow">SIDE B / A LITTLE ATMOSPHERE</p>
         <Volume2 size={18} />
       </div>
       <div className="ambience-heading">
-        <h2 id="ambience-heading">Make yourself comfortable.</h2>
+        <h2 id="ambience-heading">Set the mood.</h2>
         <button
           className="icon-button"
           disabled={pending}

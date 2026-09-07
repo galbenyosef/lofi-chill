@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useReducer, useState } from 'react';
 import {
-  Headphones,
+  CassetteTape,
   Moon,
   Pause,
   Play,
@@ -72,7 +72,7 @@ export default function Home() {
     <div className={`study-app ${quiet ? 'quiet' : ''}`}>
       <header className="topbar">
         <Link href="/" className="brand">
-          <Headphones size={23} />
+          <CassetteTape size={27} />
           <span>
             lofi <i>&</i> chill
           </span>
@@ -87,108 +87,120 @@ export default function Home() {
         </button>
       </header>
       <main>
+        <h1 className="sr-only">Your lofi study desk</h1>
         <section className="timer-section" aria-label="Pomodoro timer">
-          <p className="eyebrow">
-            <span className="status-dot" /> YOUR LITTLE CORNER OF CALM
-          </p>
-          <Tabs
-            value={timer.mode}
-            onValueChange={(value) =>
-              dispatch({ type: 'mode', mode: value as Mode, now: Date.now() })
-            }
-          >
-            <TabsList className="timer-tabs" aria-label="Session type">
-              {(Object.keys(labels) as Mode[]).map((mode) => (
-                <TabsTrigger key={mode} value={mode}>
-                  {labels[mode]}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-          <div className={`timer-face ${timer.deadline ? 'running' : ''}`}>
-            <span
-              role="timer"
-              aria-label={`${labels[timer.mode]} time remaining`}
+          <div className="timer-screen">
+            <div className="screen-header">
+              <span className="screen-state">
+                <span className="status-dot" />
+                {timer.deadline ? 'PLAY' : 'STANDBY'}
+              </span>
+              <span>STUDY TAPE — VOL. 01</span>
+              <span className="screen-speed">SP</span>
+            </div>
+            <Tabs
+              value={timer.mode}
+              onValueChange={(value) =>
+                dispatch({ type: 'mode', mode: value as Mode, now: Date.now() })
+              }
             >
-              {time}
-            </span>
-          </div>
-          <output className="timer-notice" aria-live="polite">
-            {timer.notice}
-          </output>
-          <div className="timer-actions">
-            <button
-              className="icon-button"
-              aria-label="Reset timer"
-              onClick={() => dispatch({ type: 'reset', now: Date.now() })}
-            >
-              <RotateCcw size={20} />
-            </button>
-            <button
-              className="primary-button"
-              onClick={() => dispatch({ type: 'toggle', now: Date.now() })}
-            >
-              {timer.deadline ? (
-                <Pause size={18} fill="currentColor" />
-              ) : (
-                <Play size={18} fill="currentColor" />
-              )}
-              {timer.deadline
-                ? 'Pause session'
-                : `Start ${timer.mode === 'focus' ? 'focusing' : 'break'}`}
-            </button>
-            <button
-              className="icon-button"
-              aria-label="Timer settings"
-              aria-expanded={settings}
-              onClick={() => setSettings(!settings)}
-            >
-              <SlidersHorizontal size={20} />
-            </button>
-          </div>
-          {settings && (
-            <fieldset className="timer-settings">
-              <legend>Session length · minutes</legend>
-              {(Object.keys(labels) as Mode[]).map((mode) => (
-                <label key={mode}>
-                  {labels[mode]}
-                  <input
-                    type="number"
-                    min="1"
-                    max="120"
-                    value={timer.durations[mode]}
-                    onChange={(e) =>
-                      dispatch({
-                        type: 'duration',
-                        mode,
-                        minutes: Number(e.target.value),
-                      })
+              <TabsList className="timer-tabs" aria-label="Session type">
+                {(Object.keys(labels) as Mode[]).map((mode) => (
+                  <TabsTrigger key={mode} value={mode}>
+                    {labels[mode]}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+            <div className={`timer-face ${timer.deadline ? 'running' : ''}`}>
+              <span
+                role="timer"
+                aria-label={`${labels[timer.mode]} time remaining`}
+              >
+                {time}
+              </span>
+            </div>
+            <output className="timer-notice" aria-live="polite">
+              {timer.notice}
+            </output>
+            <div className="timer-actions">
+              <button
+                className="icon-button"
+                aria-label="Reset timer"
+                onClick={() => dispatch({ type: 'reset', now: Date.now() })}
+              >
+                <RotateCcw size={20} />
+              </button>
+              <button
+                className="primary-button"
+                onClick={() => dispatch({ type: 'toggle', now: Date.now() })}
+              >
+                {timer.deadline ? (
+                  <Pause size={18} fill="currentColor" />
+                ) : (
+                  <Play size={18} fill="currentColor" />
+                )}
+                {timer.deadline
+                  ? 'Pause session'
+                  : `Start ${timer.mode === 'focus' ? 'focusing' : 'break'}`}
+              </button>
+              <button
+                className="icon-button"
+                aria-label="Timer settings"
+                aria-expanded={settings}
+                onClick={() => setSettings(!settings)}
+              >
+                <SlidersHorizontal size={20} />
+              </button>
+            </div>
+            {settings && (
+              <fieldset className="timer-settings">
+                <legend>Session length · minutes</legend>
+                {(Object.keys(labels) as Mode[]).map((mode) => (
+                  <label key={mode}>
+                    {labels[mode]}
+                    <input
+                      type="number"
+                      min="1"
+                      max="120"
+                      value={timer.durations[mode]}
+                      onChange={(e) =>
+                        dispatch({
+                          type: 'duration',
+                          mode,
+                          minutes: Number(e.target.value),
+                        })
+                      }
+                    />
+                  </label>
+                ))}
+                <p>
+                  Changes apply to your next session while a timer is running.
+                </p>
+              </fieldset>
+            )}
+            <div className="session-count">
+              <span className="session-dots" aria-hidden="true">
+                {[0, 1, 2, 3].map((i) => (
+                  <span
+                    key={i}
+                    className={
+                      i < (timer.completed % 4 || (timer.completed ? 4 : 0))
+                        ? 'filled'
+                        : ''
                     }
                   />
-                </label>
-              ))}
-              <p>
-                Changes apply to your next session while a timer is running.
-              </p>
-            </fieldset>
-          )}
-          <div className="session-count">
-            <span className="session-dots" aria-hidden="true">
-              {[0, 1, 2, 3].map((i) => (
-                <span
-                  key={i}
-                  className={
-                    i < (timer.completed % 4 || (timer.completed ? 4 : 0))
-                      ? 'filled'
-                      : ''
-                  }
-                />
-              ))}
-            </span>
-            <span>
-              {timer.completed} focus{' '}
-              {timer.completed === 1 ? 'session' : 'sessions'} today
-            </span>
+                ))}
+              </span>
+              <span>
+                {timer.completed} focus{' '}
+                {timer.completed === 1 ? 'session' : 'sessions'} today
+              </span>
+            </div>
+            <div className="tape-edge" aria-hidden="true">
+              <span>LOFI & CHILL</span>
+              <span>HIGH FIDELITY / LOW PRESSURE</span>
+            </div>
           </div>
         </section>
         <div className="sound-desk">
