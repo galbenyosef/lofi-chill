@@ -29,6 +29,7 @@ function ButtonGroup({
 }: React.ComponentProps<'div'> & VariantProps<typeof buttonGroupVariants>) {
   return (
     <div
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- Groups actions that can be used outside a form.
       role="group"
       data-slot="button-group"
       data-orientation={orientation}
