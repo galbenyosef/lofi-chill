@@ -16,7 +16,7 @@ export function AmbientMixer() {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState('');
   useEffect(() => {
-    // Browser-only preference hydration intentionally updates after the server render.
+    // Restore optional browser preferences after mounting.
     try {
       const stored = JSON.parse(
         localStorage.getItem('lofi-chill.ambience') || 'null',

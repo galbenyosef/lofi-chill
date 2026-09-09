@@ -14,7 +14,7 @@ export function RadioPlayer() {
   useEffect(() => {
     try {
       const value = localStorage.getItem('lofi-chill.station');
-      // Browser-only preference hydration intentionally updates after the server render.
+      // Restore optional browser preferences after mounting.
       // oxlint-disable-next-line react/react-compiler
       if (isStation(value)) setStation(value);
     } catch {

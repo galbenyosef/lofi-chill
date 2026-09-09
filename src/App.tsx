@@ -18,14 +18,12 @@ import {
 } from '@/components/ui/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTimerChime } from '@/hooks/use-timer-chime';
-import { useTimerTools } from '@/hooks/use-timer-tools';
 import { AmbientMixer } from '@/components/ambient-mixer';
 import { RadioPlayer } from '@/components/radio-player';
 import { initialTimer, labels, timerReducer, type Mode } from '@/lib/timer';
 
 export default function App() {
   const [timer, dispatch] = useReducer(timerReducer, undefined, initialTimer);
-  useTimerTools(timer, dispatch);
   const chime = useTimerChime(timer.completion);
   const [ready, setReady] = useState(false);
   const [settings, setSettings] = useState(false);
@@ -40,7 +38,7 @@ export default function App() {
     } catch {
       /* Storage is optional. */
     }
-    // Browser-only preference hydration intentionally updates after the server render.
+    // Restore optional browser preferences after mounting.
     // oxlint-disable-next-line react/react-compiler
     setReady(true);
   }, []);
