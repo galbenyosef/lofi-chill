@@ -12,6 +12,12 @@
 - Follow the project's existing formatter and linter configuration. Do not introduce or upgrade tooling unless necessary.
 - Prefer free and open-source solutions when they adequately meet the requirements.
 
+## Git
+
+- Always use semantic commit messages following Conventional Commits, such as `feat:`, `fix:`, `refactor:`, `docs:`, or `chore:`.
+- Create a separate, focused commit for each important change.
+- Only the user may push commits. Never run `git push` or push through any other tool; leave commits local for the user to push.
+
 ## Security
 
 - Never hardcode or expose API keys, tokens, passwords, credentials, or other secrets.
