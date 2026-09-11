@@ -1,16 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { CloudRain, Waves, Wind, Volume2, Pause, Play } from 'lucide-react';
+import {
+  Bird,
+  Flame,
+  CloudRain,
+  Waves,
+  Wind,
+  Volume2,
+  Pause,
+  Play,
+} from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
-import { AmbientMixer as Engine, soundNames, type Sound } from '@/lib/ambient';
-const icons = { rain: CloudRain, brown: Wind, waves: Waves };
+import {
+  AmbientMixer as Engine,
+  soundNames,
+  defaultVolumes,
+  restoreVolumes,
+  type Sound,
+} from '@/lib/ambient';
+const icons = {
+  rain: CloudRain,
+  brown: Wind,
+  waves: Waves,
+  birds: Bird,
+  fire: Flame,
+};
 export function AmbientMixer() {
   const engine = useRef<Engine | null>(null);
   const operation = useRef(0);
-  const [volumes, setVolumes] = useState<Record<Sound, number>>({
-    rain: 35,
-    brown: 0,
-    waves: 0,
-  });
+  const [volumes, setVolumes] = useState<Record<Sound, number>>(defaultVolumes);
   const [playing, setPlaying] = useState(false);
   const [pending, setPending] = useState(false);
   const [ready, setReady] = useState(false);
@@ -21,17 +38,8 @@ export function AmbientMixer() {
       const stored = JSON.parse(
         localStorage.getItem('lofi-chill.ambience') || 'null',
       );
-      if (
-        stored &&
-        ['rain', 'brown', 'waves'].every(
-          (key) =>
-            typeof stored[key] === 'number' &&
-            stored[key] >= 0 &&
-            stored[key] <= 100,
-        )
-      )
-        // oxlint-disable-next-line react/react-compiler
-        setVolumes(stored);
+      // oxlint-disable-next-line react/react-compiler -- Restore optional saved preferences after mounting.
+      setVolumes(restoreVolumes(stored));
     } catch {
       /* Optional preferences. */
     }

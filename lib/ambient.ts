@@ -1,8 +1,37 @@
-export type Sound = 'rain' | 'brown' | 'waves';
+export type Sound = 'rain' | 'brown' | 'waves' | 'birds' | 'fire';
 export const soundNames: Record<Sound, string> = {
   rain: 'Rainfall',
   brown: 'Brown noise',
   waves: 'Ocean hush',
+  birds: 'Birdsong',
+  fire: 'Fireplace',
+};
+export const defaultVolumes: Record<Sound, number> = {
+  rain: 35,
+  brown: 0,
+  waves: 0,
+  birds: 0,
+  fire: 0,
+};
+export function restoreVolumes(value: unknown): Record<Sound, number> {
+  const volumes = { ...defaultVolumes };
+  if (!value || typeof value !== 'object') return volumes;
+  for (const sound of Object.keys(volumes) as Sound[]) {
+    const level = (value as Record<string, unknown>)[sound];
+    if (
+      typeof level === 'number' &&
+      Number.isFinite(level) &&
+      level >= 0 &&
+      level <= 100
+    )
+      volumes[sound] = level;
+  }
+  return volumes;
+}
+const recordings: Partial<Record<Sound, string>> = {
+  rain: 'rain.mp3',
+  birds: 'birds.mp3',
+  fire: 'fire.mp3',
 };
 type Channel = {
   source: AudioBufferSourceNode;
@@ -11,12 +40,12 @@ type Channel = {
   oscillator?: OscillatorNode;
   modulation?: GainNode;
 };
-/** Bundled CC0 rain recording and locally synthesized noise; no third-party streams. */
+/** Bundled CC0 recordings and locally synthesized noise; no third-party streams. */
 export class AmbientMixer {
   private context: AudioContext;
-  private rainBuffer: AudioBuffer | null = null;
-  private rainLoading: Promise<void> | null = null;
-  private rainRequest: AbortController | null = null;
+  private buffers = new Map<Sound, AudioBuffer>();
+  private loading = new Map<Sound, Promise<void>>();
+  private requests = new Map<Sound, AbortController>();
   private disposed = false;
   private channels = new Map<Sound, Channel>();
   constructor() {
@@ -25,35 +54,40 @@ export class AmbientMixer {
   async resume() {
     if (this.disposed) throw new Error('Audio mixer has been disposed.');
     // Resume inside the click gesture before awaiting the bundled recording.
-    await Promise.all([this.context.resume(), this.loadRain()]);
+    await Promise.all([
+      this.context.resume(),
+      ...Object.keys(recordings).map((sound) =>
+        this.loadRecording(sound as Sound),
+      ),
+    ]);
     if (this.context.state !== 'running')
       throw new Error('Audio is paused by the browser. Try again.');
   }
-  private loadRain(): Promise<void> {
-    if (this.rainBuffer) return Promise.resolve();
-    if (this.rainLoading) return this.rainLoading;
+  private loadRecording(sound: Sound): Promise<void> {
+    if (this.buffers.has(sound)) return Promise.resolve();
+    const pending = this.loading.get(sound);
+    if (pending) return pending;
     const request = new AbortController();
-    this.rainRequest = request;
+    this.requests.set(sound, request);
     const timeout = setTimeout(() => request.abort(), 15000);
-    this.rainLoading = (async () => {
+    const loading = (async () => {
       const response = await fetch(
-        `${import.meta.env?.BASE_URL ?? '/'}audio/rain.mp3`,
-        {
-          signal: request.signal,
-        },
+        `${import.meta.env?.BASE_URL ?? '/'}audio/${recordings[sound]}`,
+        { signal: request.signal },
       );
-      if (!response.ok) throw new Error('Could not load the rain recording.');
+      if (!response.ok) throw new Error(`Could not load ${soundNames[sound]}.`);
       const buffer = await this.context.decodeAudioData(
         await response.arrayBuffer(),
       );
       if (this.disposed) throw new Error('Audio mixer has been disposed.');
-      this.rainBuffer = buffer;
+      this.buffers.set(sound, buffer);
     })().finally(() => {
       clearTimeout(timeout);
-      this.rainRequest = null;
-      this.rainLoading = null;
+      this.requests.delete(sound);
+      this.loading.delete(sound);
     });
-    return this.rainLoading;
+    this.loading.set(sound, loading);
+    return loading;
   }
   setVolume(sound: Sound, volume: number) {
     if (this.disposed) return;
@@ -62,10 +96,11 @@ export class AmbientMixer {
     if (!channel && level === 0) return;
     if (!channel) {
       let buffer: AudioBuffer;
-      if (sound === 'rain') {
+      if (recordings[sound]) {
         // Volume can change while the first recording download is pending.
-        if (!this.rainBuffer) return;
-        buffer = this.rainBuffer;
+        const recording = this.buffers.get(sound);
+        if (!recording) return;
+        buffer = recording;
       } else {
         buffer = this.context.createBuffer(
           2,
@@ -92,9 +127,9 @@ export class AmbientMixer {
       const source = this.context.createBufferSource();
       source.buffer = buffer;
       source.loop = true;
-      source.loopStart = sound === 'rain' ? 0 : 0.05;
+      source.loopStart = recordings[sound] ? 0 : 0.05;
       const filter = this.context.createBiquadFilter();
-      filter.type = sound === 'rain' ? 'allpass' : 'lowpass';
+      filter.type = recordings[sound] ? 'allpass' : 'lowpass';
       filter.frequency.value = sound === 'waves' ? 650 : 450;
       const gain = this.context.createGain();
       gain.gain.value = 0;
@@ -117,7 +152,7 @@ export class AmbientMixer {
       this.channels.set(sound, channel);
     }
     channel.gain.gain.setTargetAtTime(
-      level * (sound === 'rain' ? 1 : 0.5),
+      level * (recordings[sound] ? 1 : 0.5),
       this.context.currentTime,
       0.12,
     );
@@ -125,8 +160,8 @@ export class AmbientMixer {
   async dispose() {
     if (this.disposed) return;
     this.disposed = true;
-    this.rainRequest?.abort();
-    this.rainBuffer = null;
+    this.requests.forEach((request) => request.abort());
+    this.buffers.clear();
     this.channels.forEach((c) => {
       c.source.stop();
       c.oscillator?.stop();
