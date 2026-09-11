@@ -150,7 +150,9 @@ export default function App() {
                 )}
                 {timer.deadline
                   ? 'Pause session'
-                  : `Start ${timer.mode === 'focus' ? 'focusing' : 'break'}`}
+                  : timer.started
+                    ? 'Resume session'
+                    : `Start ${timer.mode === 'focus' ? 'focusing' : 'break'}`}
               </button>
               <Popover open={settings} onOpenChange={setSettings}>
                 <PopoverTrigger
@@ -195,8 +197,8 @@ export default function App() {
                       Test sound
                     </button>
                     <p>
-                      Changes apply to your next session while a timer is
-                      running.
+                      Changes apply to new sessions. Reset a paused session to
+                      use the new length.
                     </p>
                   </fieldset>
                 </PopoverContent>

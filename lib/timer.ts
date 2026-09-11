@@ -3,6 +3,8 @@ export type Durations = Record<Mode, number>;
 export type Timer = {
   mode: Mode;
   remaining: number;
+  started: boolean;
+  saved: Partial<Record<Mode, { remaining: number; started: boolean }>>;
   deadline: number | null;
   completed: number;
   completion: number;
@@ -22,6 +24,8 @@ export const localDay = (now: number) => {
 export const initialTimer = (): Timer => ({
   mode: 'focus',
   remaining: 1500,
+  saved: {},
+  started: false,
   deadline: null,
   completed: 0,
   completion: 0,
@@ -68,27 +72,52 @@ export function timerReducer(state: Timer, action: Action): Timer {
     return {
       ...s,
       durations: { ...s.durations, [action.mode]: action.minutes },
-      ...(s.mode === action.mode && s.deadline === null
+      saved: {
+        ...s.saved,
+        ...(s.saved[action.mode]?.started === false
+          ? {
+              [action.mode]: { remaining: action.minutes * 60, started: false },
+            }
+          : {}),
+      },
+      ...(s.mode === action.mode && s.deadline === null && !s.started
         ? { remaining: action.minutes * 60 }
         : {}),
     };
   }
-  if (action.type === 'mode')
+  if (action.type === 'mode') {
+    if (action.mode === s.mode) return s;
+    // Account for elapsed time (and a possible completion) before leaving a tab.
+    s = timerReducer(s, { type: 'tick', now: action.now });
+    if (action.mode === s.mode) return s;
     return {
       ...s,
+      saved: {
+        ...s.saved,
+        [s.mode]: { remaining: s.remaining, started: s.started },
+      },
       mode: action.mode,
-      remaining: s.durations[action.mode] * 60,
+      started: s.saved[action.mode]?.started ?? false,
+      remaining:
+        s.saved[action.mode]?.remaining ?? s.durations[action.mode] * 60,
       deadline: null,
-      notice:
-        action.mode === 'focus'
+      notice: s.saved[action.mode]?.started
+        ? 'Your session is saved. Resume when you’re ready.'
+        : action.mode === 'focus'
           ? 'Make room for one thing.'
           : 'A little room to breathe.',
     };
+  }
   if (action.type === 'reset')
     return {
       ...s,
       remaining: s.durations[s.mode] * 60,
+      saved: {
+        ...s.saved,
+        [s.mode]: { remaining: s.durations[s.mode] * 60, started: false },
+      },
       deadline: null,
+      started: false,
       notice: 'Ready when you are.',
     };
   const remaining =
@@ -104,7 +133,12 @@ export function timerReducer(state: Timer, action: Action): Timer {
       completed,
       completion: s.completion + 1,
       mode,
-      remaining: s.durations[mode] * 60,
+      started: s.saved[mode]?.started ?? false,
+      remaining: s.saved[mode]?.remaining ?? s.durations[mode] * 60,
+      saved: {
+        ...s.saved,
+        [s.mode]: { remaining: s.durations[s.mode] * 60, started: false },
+      },
       deadline: null,
       notice:
         s.mode === 'focus'
@@ -117,6 +151,7 @@ export function timerReducer(state: Timer, action: Action): Timer {
       ...s,
       remaining,
       deadline: s.deadline === null ? action.now + remaining * 1000 : null,
+      started: true,
       notice:
         s.deadline === null
           ? s.mode === 'focus'
