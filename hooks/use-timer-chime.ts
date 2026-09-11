@@ -22,7 +22,7 @@ export function useTimerChime(completion: number) {
         oscillator.type = 'sine';
         oscillator.frequency.value = frequency;
         gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.055, start + 0.035);
+        gain.gain.linearRampToValueAtTime(0.07, start + 0.035);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.25);
         oscillator.connect(gain);
         gain.connect(audio.destination);
