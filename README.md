@@ -6,9 +6,9 @@ A synthwave study desk with a Pomodoro timer, YouTube lofi radio, and ambient so
 
 ## Features
 
-- Adjustable focus sessions and breaks, with a gentle end sound.
+- Adjustable focus sessions and breaks, with a gentle end sound. Switching timer tabs pauses and preserves progress; return and press Resume to continue.
 - Four YouTube radio stations that play directly on the page.
-- Real rain, brown noise, and ocean sounds with individual volume controls.
+- Real rain, birdsong, and fireplace loops, plus brown noise and ocean sounds, with individual volume controls.
 - Focus mode and a daily session count.
 - Preferences saved in your browser.
 
