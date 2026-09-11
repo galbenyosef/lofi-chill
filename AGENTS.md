@@ -16,6 +16,8 @@
 
 - Always use semantic commit messages following Conventional Commits, such as `feat:`, `fix:`, `refactor:`, `docs:`, or `chore:`.
 - Create a separate, focused commit for each important change.
+- Create branches if needed and merge the code when makes sense.
+- Always go for clean versioning for easy understanding of all developers later.
 - Only the user may push commits. Never run `git push` or push through any other tool; leave commits local for the user to push.
 
 ## Security
